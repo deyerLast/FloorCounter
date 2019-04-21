@@ -3,4 +3,6 @@
     <string name="walking">Walking</string>
     <string name="save">Save</string>
     <string name="climb">Climb!</string>
+    <string name="get_ready">get_ready</string>
+    <string name="walk">walk</string>
 </resources>

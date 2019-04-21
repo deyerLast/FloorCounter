@@ -7,10 +7,16 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.Button
+import android.widget.ListView
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
-import java.io.FileWriter
 import java.lang.Exception
 import kotlin.math.sqrt
 
@@ -19,7 +25,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     lateinit var sensorManager: SensorManager
 
     //saving
-    var data = ""
+    var data = arrayListOf<String>()
     var xData = arrayListOf<Double>()
     var yData = arrayListOf<Double>()
     var zData = arrayListOf<Double>()
@@ -33,6 +39,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     var pythageUnfilterd:Double = 0.0
     var infoPythagUnfiltered = arrayListOf<Double>()
 
+    var pythagfiltered = arrayListOf<Double>()
+
     var sensorEventCount = 0
     var filterEventCount = 0
 
@@ -43,6 +51,23 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     var infoStep = arrayListOf<String>()
     var infoClimb = arrayListOf<String>()
 
+    // file to save step data
+    var fileStep = File(
+        Environment.getExternalStoragePublicDirectory(
+        Environment.DIRECTORY_DOCUMENTS), "step.txt")
+    // file to save climb data
+    var fileClimb = File(Environment.getExternalStoragePublicDirectory(
+        Environment.DIRECTORY_DOCUMENTS), "climb.txt")
+    // file to save unfiltered pythag data
+    var filePythagUnfiltered = File(Environment.getExternalStoragePublicDirectory(
+        Environment.DIRECTORY_DOCUMENTS), "pythagoreanUnfiltered.txt")
+    // file to save filtered pythag data
+    var filePythag = File(Environment.getExternalStoragePublicDirectory(
+        Environment.DIRECTORY_DOCUMENTS), "pythagoreanFiltered.txt")
+
+
+
+    //==============================================================================================================================
 
     override fun onPause() {
         super.onPause()
@@ -51,20 +76,23 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         sensorManager?.unregisterListener(this)
     }
 
+    //==============================================================================================================================
+
     override fun onResume() {
         super.onResume()
 
     }
 
-
-
+    //==============================================================================================================================
 
     override fun onSensorChanged(event: SensorEvent?) {
        acceler.text = "x = ${event!!.values[0]}\n\n" +
                 "y = ${event.values[1]}\n\n" +
                 "z = ${event.values[2]}"
         //xData = (if (event != null) event else throw NullPointerException("Expression 'event' must not be null")).values[0]
-        data = acceler.toString()
+        data.add("x = ${event!!.values[0]}\n\n" +
+                "y = ${event.values[1]}\n\n" +
+                "z = ${event.values[2]}")
 
 
 
@@ -74,7 +102,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 (event.values[2].toDouble()*event.values[2].toDouble())
         pythageUnfilterd = sqrt(pythag) //Combination of all the axis
 
-        //filter pythag thm. data into an array
+        //pythag thm. data into an array
         infoPythagUnfiltered.add(pythageUnfilterd)
 
 
@@ -82,23 +110,47 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 //WHat is wrong with the valleys?
 
         //peaks and valleys
-        if(infoPythagUnfiltered.size > 3) {
+ /*       if(infoPythagUnfiltered.size > 3) {
 
             if ((infoPythagUnfiltered[sensorEventCount-1] > infoPythagUnfiltered[sensorEventCount-2]) &&
                 (infoPythagUnfiltered[sensorEventCount-1] > infoPythagUnfiltered[sensorEventCount]) ) {
 
-                infoPythagUnfiltered.add((infoPythagUnfiltered[sensorEventCount - 1]))
+                pythagfiltered.add((infoPythagUnfiltered[sensorEventCount - 1]))
                 filterEventCount += 1
 
             }
             if ((infoPythagUnfiltered[sensorEventCount - 1] < infoPythagUnfiltered[sensorEventCount - 2]) &&
                 (infoPythagUnfiltered[sensorEventCount - 1] < infoPythagUnfiltered[sensorEventCount]) ) {
 
-                infoPythagUnfiltered.add((infoPythagUnfiltered[sensorEventCount - 1]))
+                pythagfiltered.add((infoPythagUnfiltered[sensorEventCount - 1]))
                 filterEventCount += 1
             }
         }
+*/
 
+        // just testing a method to see if i could only count peaks but peaks don't represent steps
+        if (pythagfiltered.size > 3) {
+
+            if ( (pythagfiltered[filterEventCount-1] > pythagfiltered[filterEventCount-2]) &&
+                (pythagfiltered[filterEventCount-1] > pythagfiltered[filterEventCount]) &&
+                (pythagfiltered[filterEventCount-1] > 10.5) ) {
+                if (stepClicked == true) {
+                    stepCount +=1
+
+                    Log.i ("info step counter", stepCount.toString())
+                    Log.i ("info step pF -1", pythagfiltered[filterEventCount-1].toString())
+                    Log.i ("info step pF -2", pythagfiltered[filterEventCount-2].toString())
+                    Log.i ("info step pF", pythagfiltered[filterEventCount-0].toString())
+
+                }
+
+                if (climbClicked == true) {
+                    climbCount += 1
+                    Log.i ("info climb counter", climbCount.toString())
+
+                }
+            }
+        }
 
 
 
@@ -117,7 +169,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     " z = ${event.values[2]}  +")
         }
 
+
+
+
+       // WriteToFile("$data\n What's Going ON!!? \n")
+
     }
+
+    //==============================================================================================================================
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
 
@@ -154,11 +213,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 stepClicked = false
                 sensorManager.unregisterListener(this)
             }
+
         }
 
         climbButton.setOnClickListener {
             if(climbClicked == false){
-                climbClicked == true
+                climbClicked = true
                 if(stepClicked == true){
                     stepClicked = false
                 }
@@ -168,19 +228,132 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 climbClicked = false
                 sensorManager.unregisterListener(this)
             }
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
         //var save = findViewById<Button>(R.id.save)
 
     } // End onCreate
 
     //==================================================================================================================
 
-    fun WriteToFile(str:String){
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem)= when(item.itemId) {
+
+
+        R.id.view -> {
+            //view button is to just view the list of sensor data but it is not implemented yet
+
+            var textD: TextView = findViewById(R.id.text1)
+            textD.visibility = View.INVISIBLE
+
+            var textC:TextView = findViewById(R.id.climbCount)
+            textC.visibility = View.INVISIBLE
+
+            var textS:TextView = findViewById(R.id.stepCount)
+            textS.visibility = View.INVISIBLE
+
+            var bC:Button = findViewById(R.id.climb)
+            bC.visibility = View.INVISIBLE
+            var bS:Button = findViewById(R.id.step)
+            bS.visibility = View.INVISIBLE
+
+            var data: ListView = findViewById(R.id.list)
+            data.visibility = View.VISIBLE
+
+            true
+        }
+
+        R.id.write -> {
+            //used to save all the arrays to files if the save button is pressed
+
+            fileStep.writeText("walk =  " + infoStep.toString())
+            infoStep.clear()
+
+            fileClimb.writeText("climb =  " + infoClimb.toString())
+            infoClimb.clear()
+
+            filePythag.writeText("Pythagorean Filtered Data (X,Y,Z) =  " + pythagfiltered.toString())
+            pythagfiltered.clear()
+
+            //filePythagUnfiltered.writeText("Pythagorean Unfiltered Data (X, Y, Z) =  " + infoPythagUnfiltered.toString())
+            infoPythagUnfiltered.clear()
+
+            true
+        }
+
+        R.id.clear -> {
+            //used to save all the arrays to files if the save button is pressed
+
+            infoStep.clear()
+            infoClimb.clear()
+            //infoPythagFiltered.clear()
+            infoPythagUnfiltered.clear()
+
+            true
+        }
+
+        R.id.back -> {
+            // sets list to invisible and goes back to original state
+            var textD:TextView = findViewById(R.id.text1)
+            textD.visibility = View.VISIBLE
+            var textC:TextView = findViewById(R.id.climbCount)
+            textC.visibility = View.VISIBLE
+
+            var textS:TextView = findViewById(R.id.stepCount)
+            textS.visibility = View.VISIBLE
+
+            var bC:Button = findViewById(R.id.climb)
+            bC.visibility = View.VISIBLE
+            var bS:Button = findViewById(R.id.step)
+            bS.visibility = View.VISIBLE
+
+            var data:ListView = findViewById(R.id.list)
+            data.visibility = View.INVISIBLE
+
+            true
+        }
+
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+
+    }
+
+
+    //==================================================================================================================
+
+    fun WriteToFile(str: ArrayList<String>){
         try{
            // var fo = FileWriter("floorCounterSaveFile.txt")
-            val fileName = FileWriter("src/resources/savedData.txt")
-            fileName.write(str + "\n")
-            fileName.close()
+            val fileName = "src/resources/savedData.txt"
+            val myFile = File(fileName)
+
+            myFile.printWriter().use{
+                out ->
+                out.println(str + "\n")
+
+                println("Wrote to file: src/resources/savedData.tx")
+            }
+
+            //println("Wrote to file: src/resources/savedData.tx")
+
         } catch (ex:Exception){
             print(ex.message)
         }
