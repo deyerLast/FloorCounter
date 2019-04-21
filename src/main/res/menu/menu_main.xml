@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.example.example.MainActivity">
+    <item android:id="@+id/view"
+          android:title="View Data"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+    <item android:title="Back" android:id="@+id/back"/>
+    <item android:title="Save" android:id="@+id/write"/>
+    <item android:title="Clear" android:id="@+id/clear"/>
+</menu>
