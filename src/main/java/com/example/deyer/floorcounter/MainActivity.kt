@@ -5,9 +5,11 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.support.annotation.RequiresApi
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -15,9 +17,13 @@ import android.view.View
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
+import com.example.deyer.floorcounter.R.id.text1
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.BufferedWriter
 import java.io.File
+import java.io.FileDescriptor.out
 import java.lang.Exception
+import java.util.*
 import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
@@ -48,22 +54,27 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var climbClicked = false
 
     //These are the values to save, or think about using these to save
-    var infoStep = arrayListOf<String>()
+    val infoStep = arrayListOf<String>()
     var infoClimb = arrayListOf<String>()
 
-    // file to save step data
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+// file to save step data
     var fileStep = File(
         Environment.getExternalStoragePublicDirectory(
         Environment.DIRECTORY_DOCUMENTS), "step.txt")
-    // file to save climb data
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+// file to save climb data
     var fileClimb = File(Environment.getExternalStoragePublicDirectory(
         Environment.DIRECTORY_DOCUMENTS), "climb.txt")
-    // file to save unfiltered pythag data
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+// file to save unfiltered pythag data
     var filePythagUnfiltered = File(Environment.getExternalStoragePublicDirectory(
         Environment.DIRECTORY_DOCUMENTS), "pythagoreanUnfiltered.txt")
-    // file to save filtered pythag data
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+// file to save filtered pythag data
     var filePythag = File(Environment.getExternalStoragePublicDirectory(
         Environment.DIRECTORY_DOCUMENTS), "pythagoreanFiltered.txt")
+
 
 
 
@@ -86,14 +97,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     //==============================================================================================================================
 
     override fun onSensorChanged(event: SensorEvent?) {
-       acceler.text = "x = ${event!!.values[0]}\n\n" +
+       text1.text = "x = ${event!!.values[0]}\n\n" +
                 "y = ${event.values[1]}\n\n" +
                 "z = ${event.values[2]}"
         //xData = (if (event != null) event else throw NullPointerException("Expression 'event' must not be null")).values[0]
         data.add("x = ${event!!.values[0]}\n\n" +
                 "y = ${event.values[1]}\n\n" +
                 "z = ${event.values[2]}")
-
 
 
         //Climb Using Pythag
@@ -117,8 +127,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
                 pythagfiltered.add((infoPythagUnfiltered[sensorEventCount - 1]))
                 filterEventCount += 1
-
             }
+
             if ((infoPythagUnfiltered[sensorEventCount - 1] < infoPythagUnfiltered[sensorEventCount - 2]) &&
                 (infoPythagUnfiltered[sensorEventCount - 1] < infoPythagUnfiltered[sensorEventCount]) ) {
 
@@ -128,7 +138,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
 */
 
-        // just testing a method to see if i could only count peaks but peaks don't represent steps
+        // Just testing a method to see if i could only count peaks but peaks don't represent steps
         if (pythagfiltered.size > 3) {
 
             if ( (pythagfiltered[filterEventCount-1] > pythagfiltered[filterEventCount-2]) &&
@@ -170,8 +180,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
 
 
-
-
        // WriteToFile("$data\n What's Going ON!!? \n")
 
     }
@@ -198,8 +206,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             SensorManager.SENSOR_DELAY_NORMAL
         )
 
-        var climbButton: Button = findViewById(R.id.climbButton)
-        var stepButton: Button = findViewById(R.id.walkButton)
+        var climbButton: Button = findViewById(R.id.climb)
+        var stepButton: Button = findViewById(R.id.step)
 
         stepButton.setOnClickListener {
             if (stepClicked == false){
@@ -213,7 +221,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 stepClicked = false
                 sensorManager.unregisterListener(this)
             }
-
         }
 
         climbButton.setOnClickListener {
@@ -229,18 +236,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 sensorManager.unregisterListener(this)
             }
 
-
-
-
-
         }
-
-
-
-
-
-
-
 
         //var save = findViewById<Button>(R.id.save)
 
@@ -283,16 +279,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         R.id.write -> {
             //used to save all the arrays to files if the save button is pressed
 
-            fileStep.writeText("walk =  " + infoStep.toString())
+
+
+
+            File("stepData.txt").bufferedWriter().use { out -> out.write(infoStep.toString()) }
             infoStep.clear()
 
-            fileClimb.writeText("climb =  " + infoClimb.toString())
+            //fileClimb.writeText("climb =  " + infoClimb.toString())
             infoClimb.clear()
 
             filePythag.writeText("Pythagorean Filtered Data (X,Y,Z) =  " + pythagfiltered.toString())
             pythagfiltered.clear()
 
-            //filePythagUnfiltered.writeText("Pythagorean Unfiltered Data (X, Y, Z) =  " + infoPythagUnfiltered.toString())
+            filePythagUnfiltered.writeText("Pythagorean Unfiltered Data (X, Y, Z) =  " + infoPythagUnfiltered.toString())
             infoPythagUnfiltered.clear()
 
             true
@@ -359,3 +358,4 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 }
+

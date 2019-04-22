@@ -5,4 +5,6 @@
     <string name="climb">Climb!</string>
     <string name="get_ready">get_ready</string>
     <string name="walk">walk</string>
+    <string name="climb1">climb</string>
+    <string name="step">step</string>
 </resources>

@@ -8,47 +8,65 @@
         tools:context=".MainActivity">
 
     <TextView
-            android:id="@+id/acceler"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"
+            android:layout_width="317dp"
+            android:layout_height="154dp"
+            android:text="@string/get_ready"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:id="@+id/walkButton" android:text="@string/walking"
-            android:layout_marginBottom="112dp"
-            app:layout_constraintBottom_toTopOf="@+id/acceler" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp" android:layout_marginStart="8dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/climbButton" android:layout_marginRight="8dp"
-            app:layout_constraintHorizontal_bias="0.367"/>
-
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:id="@+id/climbButton" android:text="@string/climb"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="52dp" android:layout_marginRight="52dp"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/acceler"
-            app:layout_constraintVertical_bias="0.431"/>
-
-
-
-
-    <Toolbar android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:id="@+id/toolbar" tools:targetApi="lollipop"></Toolbar>
-
-
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:id="@+id/save"
-            android:text="@string/save"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/acceler" app:layout_constraintEnd_toStartOf="@+id/acceler"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"/>
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.154"
+            app:layout_constraintHorizontal_bias="0.446" android:gravity="center" android:textSize="18sp"
+            android:id="@+id/text1"/>
+    <TextView
+            android:layout_width="149dp"
+            android:layout_height="90dp"
+            android:text="@string/climb1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.379"
+            app:layout_constraintHorizontal_bias="0.16" android:gravity="center" android:textSize="30sp"
+            android:id="@+id/climbCount"/>
+    <TextView
+            android:layout_width="149dp"
+            android:layout_height="90dp"
+            android:text="@string/step"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.379"
+            app:layout_constraintHorizontal_bias="0.801" android:gravity="center" android:textSize="30sp"
+            android:id="@+id/stepCount"/>
+    <Button
+            android:text="@string/climb"
+            android:layout_width="194dp"
+            android:layout_height="80dp" android:id="@+id/climb"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="170dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="153dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="0.584"
+            app:layout_constraintVertical_bias="0.588" android:layout_marginRight="153dp"
+            android:layout_marginLeft="170dp"/>
+    <Button
+            android:text="@string/walk"
+            android:layout_width="194dp"
+            android:layout_height="80dp"
+            android:id="@+id/step" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="170dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="153dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="0.584"
+            app:layout_constraintVertical_bias="0.825" android:layout_marginRight="153dp"/>
+    <ListView
+            android:layout_width="match_parent"
+            android:layout_height="757dp"
+            android:layout_marginTop="21dp"
+            app:layout_constraintTop_toBottomOf="@+id/text1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/list"
+            android:visibility="invisible"
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll"/>
 
 </android.support.constraint.ConstraintLayout>
