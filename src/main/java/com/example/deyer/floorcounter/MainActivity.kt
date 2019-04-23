@@ -31,10 +31,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     lateinit var sensorManager: SensorManager
 
     //saving
-    var data = arrayListOf<String>()
-    var xData = arrayListOf<Double>()
-    var yData = arrayListOf<Double>()
-    var zData = arrayListOf<Double>()
+    val data = arrayListOf<String>()
+    val xData = arrayListOf<Double>()
+    val yData = arrayListOf<Double>()
+    val zData = arrayListOf<Double>()
 
     //var finalData = arrayListOf<Double>(xData[0], yData[1], zData[2])
 
@@ -43,12 +43,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     var pythag:Double = 0.0
     var pythageUnfilterd:Double = 0.0
-    var infoPythagUnfiltered = arrayListOf<Double>()
+    val infoPythagUnfiltered = arrayListOf<Double>()
 
-    var pythagfiltered = arrayListOf<Double>()
+    val pythagfiltered = arrayListOf<Double>()
 
-    var sensorEventCount = 0
-    var filterEventCount = 0
+    val sensorEventCount = 0
+    val filterEventCount = 0
 
     private var stepClicked = false
     private var climbClicked = false
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     val infoStep = arrayListOf<String>()
     var infoClimb = arrayListOf<String>()
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
+/*    @RequiresApi(Build.VERSION_CODES.KITKAT)
 // file to save step data
     var fileStep = File(
         Environment.getExternalStoragePublicDirectory(
@@ -74,6 +74,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 // file to save filtered pythag data
     var filePythag = File(Environment.getExternalStoragePublicDirectory(
         Environment.DIRECTORY_DOCUMENTS), "pythagoreanFiltered.txt")
+*/
+    val fileStep = File("walk")
 
 
 
@@ -279,24 +281,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         R.id.write -> {
             //used to save all the arrays to files if the save button is pressed
 
+            infoStep.openFileOutput(fileStep, Context.MODE_PRIVATE).use{
+                infoStep.write(fileStep.toString().toByteArray())
+            }
 
-
-
-            File("stepData.txt").bufferedWriter().use { out -> out.write(infoStep.toString()) }
-            infoStep.clear()
-
-            //fileClimb.writeText("climb =  " + infoClimb.toString())
-            infoClimb.clear()
-
-            filePythag.writeText("Pythagorean Filtered Data (X,Y,Z) =  " + pythagfiltered.toString())
-            pythagfiltered.clear()
-
-            filePythagUnfiltered.writeText("Pythagorean Unfiltered Data (X, Y, Z) =  " + infoPythagUnfiltered.toString())
-            infoPythagUnfiltered.clear()
 
             true
         }
-
         R.id.clear -> {
             //used to save all the arrays to files if the save button is pressed
 
