@@ -55,8 +55,9 @@
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="153dp" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="0.584"
-            app:layout_constraintVertical_bias="0.825" android:layout_marginRight="153dp"/>
-    <ListView
+            app:layout_constraintVertical_bias="0.825" android:layout_marginRight="153dp"
+            android:layout_marginLeft="170dp"/>
+    <TextView
             android:layout_width="match_parent"
             android:layout_height="757dp"
             android:layout_marginTop="21dp"
@@ -64,9 +65,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/list"
-            android:visibility="invisible"
+            android:id="@+id/view"
+            android:text="Text is Here"
+            android:visibility="visible"
             android:stackFromBottom="true"
-            android:transcriptMode="alwaysScroll"/>
+            android:transcriptMode="alwaysScroll" app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintVertical_bias="0.491"/>
 
 </android.support.constraint.ConstraintLayout>
